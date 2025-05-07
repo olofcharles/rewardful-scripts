@@ -1,0 +1,15 @@
+select 
+    affiliates.id as affiliate_id,
+    affiliates.email as affiliate_email,
+    concat(affiliates.first_name, ' ',affiliates.last_name) as affiliate_name,
+    count(referrals.id) as total_conversions
+from referrals
+join affiliates on referrals.affiliate_id = affiliates.id
+where referrals.company_id = 'COMPANY ID'
+    and referrals.became_conversion_at >= current_date - interval '90 DAYS'
+    and referrals.affiliate_id not in (
+    'AFF_ID1',
+    'AFF_ID2'
+)
+group by affiliates.id, affiliate_name
+order by total_conversions DESC;
